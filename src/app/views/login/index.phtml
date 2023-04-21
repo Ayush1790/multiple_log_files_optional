@@ -1,0 +1,20 @@
+<!-- login form -->
+<h2>Login using this form</h2>
+
+<?php echo $this->tag->form("login/login"); ?>
+
+<p>
+    <label for="email">E-Mail</label>
+    <?php echo $this->tag->textField(["email",'value'=>$this->cookies->get('user_email')]); ?>
+</p>
+
+<p>
+    <label for="pswd">Password</label>
+    <?php echo $this->tag->textField(["pswd","value"=>$this->cookies->get('user_pswd')]); ?>
+</p>
+
+<p>
+    <?php echo $this->tag->submitButton("Login"); ?>
+</p>
+
+</form>

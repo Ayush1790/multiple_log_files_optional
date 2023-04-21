@@ -5,17 +5,17 @@
 
 <p>
     <label for="name">Name</label>
-    <?php echo $this->tag->textField("name"); ?>
+    <?php echo $this->tag->textField(["name","required"=>"true"]); ?>
 </p>
 
 <p>
     <label for="email">E-Mail</label>
-    <?php echo $this->tag->textField("email"); ?>
+    <?php echo $this->tag->textField(["email","required"=>"true"]); ?>
 </p>
 
 <p>
     <label for="pswd">Password</label>
-    <?php echo $this->tag->textField("pswd"); ?>
+    <?php echo $this->tag->textField(["pswd","required"=>"true"]); ?>
 </p>
 
 <p>

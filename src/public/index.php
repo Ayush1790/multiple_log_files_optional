@@ -10,8 +10,7 @@ use Phalcon\Config;
 use Phalcon\Session\Manager;
 use Phalcon\Session\Adapter\Stream;
 use Phalcon\Http\Response\Cookies;
-use date\Date;
-
+use Phalcon\Logger;
 
 $config = new Config([]);
 
@@ -31,13 +30,15 @@ $loader->registerDirs(
 
 $loader->registerNamespaces(
     [
-        "date"=>APP_PATH."/assets/",
+        "date" => APP_PATH . "/assets/",
     ]
+);
 
-    );
+$loader->registerClasses([
+    "Myescaper" => APP_PATH . '/component/Myescaper.php'
+]);
 
 $loader->register();
-
 $container = new FactoryDefault();
 
 $container->set(
@@ -101,9 +102,9 @@ $container->set(
                 'username' => 'root',
                 'password' => 'secret',
                 'dbname'   => 'phalconApp',
-                ]
-            );
-        }
+            ]
+        );
+    }
 );
 
 $container->set(
@@ -115,6 +116,23 @@ $container->set(
     },
     true
 );
+
+$container->set(
+    'logger',
+    function () {
+        $login = new  Phalcon\Logger\Adapter\Stream(APP_PATH . '/logs/login.log');
+        $signup = new  Phalcon\Logger\Adapter\Stream(APP_PATH . '/logs/signup.log');
+        $logger  = new Logger(
+            'messages',
+            [
+                'login' => $login,
+                'signup' => $signup
+            ]
+        );
+        return $logger;
+    }
+);
+
 $application = new Application($container);
 
 try {

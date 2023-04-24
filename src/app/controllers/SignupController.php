@@ -11,14 +11,16 @@ class SignupController extends Controller
     }
     public function registerAction()
     {
+        $escaper = new Myescaper();
         $user = new Users();
+        $data = [
+            'name' => $escaper->sanitize($this->request->getPost('name')),
+            'email' => $escaper->sanitize($this->request->getPost('email')),
+            'pswd' => $escaper->sanitize($this->request->getPost('pswd'))
+        ];
         $user->assign(
-            $this->request->getPost(),
-            [
-                'name',
-                'email',
-                'pswd'
-            ]
+            $data,
+            ['name', 'email', 'pswd']
         );
         $success = $user->save();
         if ($success) {
@@ -35,8 +37,12 @@ class SignupController extends Controller
             }
             $this->view->message = true;
         } else {
-            $msg = "Not Register succesfully due to following reason: <br>" . implode("<br>", $user->getMessages());
-            $this->view->message = $msg;
+            $this->logger
+                ->excludeAdapters(['login'])
+                ->info(implode("<br>", $user->getMessages()));
+            $fullMsg = "Not Register succesfully due to following reason: <br>" . implode("<br>", $user->getMessages());
+            $this->view->message = false;
+            $this->view->fullMsg = $fullMsg;
         }
         unset($success);
     }

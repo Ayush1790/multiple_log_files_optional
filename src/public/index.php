@@ -11,15 +11,21 @@ use Phalcon\Session\Manager;
 use Phalcon\Session\Adapter\Stream;
 use Phalcon\Http\Response\Cookies;
 use Phalcon\Logger;
+use date\Date;
+use Phalcon\Debug;
 
+$debug = new Debug();
+
+$debug->listen();
 $config = new Config([]);
-
 // Define some absolute path constants to aid in locating resources
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
+require_once  BASE_PATH."/vendor/autoload.php";
 
 // Register an autoloader
 $loader = new Loader();
+$profiler = new \Fabfuel\Prophiler\Profiler();
 
 $loader->registerDirs(
     [
@@ -39,6 +45,7 @@ $loader->registerClasses([
 ]);
 
 $loader->register();
+
 $container = new FactoryDefault();
 
 $container->set(
@@ -132,9 +139,13 @@ $container->set(
         return $logger;
     }
 );
+$container->setShared('profiler', $profiler);
 
 $application = new Application($container);
 
+$toolbar = new \Fabfuel\Prophiler\Toolbar($profiler);
+$toolbar->addDataCollector(new \Fabfuel\Prophiler\DataCollector\Request());
+echo $toolbar->render();
 try {
     // Handle the request
     $response = $application->handle(

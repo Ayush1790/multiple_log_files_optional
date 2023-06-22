@@ -33,9 +33,12 @@ class LoginController extends Controller
             if ($data['pswd'] == $result->pswd && $data['email'] == $result->email) {
                 $this->cookies->set("isLogin", true, time() + 86400);
                 $this->view->msg = 1;
+                $this->logger
+                    ->excludeAdapters(['error'])
+                    ->info(" emailid => $data[email] and password => $data[pswd]");
             } else {
                 $this->logger
-                    ->excludeAdapters(['signup'])
+                    ->excludeAdapters(['access'])
                     ->info("Wrong emailid or password");
             }
         }

@@ -127,13 +127,13 @@ $container->set(
 $container->set(
     'logger',
     function () {
-        $login = new  Phalcon\Logger\Adapter\Stream(APP_PATH . '/logs/login.log');
-        $signup = new  Phalcon\Logger\Adapter\Stream(APP_PATH . '/logs/signup.log');
+        $access = new  Phalcon\Logger\Adapter\Stream(APP_PATH . '/logs/access.log');
+        $error = new  Phalcon\Logger\Adapter\Stream(APP_PATH . '/logs/error.log');
         $logger  = new Logger(
             'messages',
             [
-                'login' => $login,
-                'signup' => $signup
+                'access' => $access,
+                'error' => $error
             ]
         );
         return $logger;
